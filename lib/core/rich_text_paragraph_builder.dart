@@ -1,21 +1,14 @@
 import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/rich_text_paragraph.dart';
 
 class RichTextParagraphBuilder {
   RichTextParagraphBuilder({ui.ParagraphStyle? style})
-      : _paragraphStyle = style,
-        _textSpans = [],
-        _maxLines = 0;
+      : _paragraphStyle = style;
   // 默认样式
   ui.ParagraphStyle? _paragraphStyle;
   ui.TextStyle? _textStyle;
-
-  List<TextSpan> _textSpans;
-  set textSpans(List<TextSpan> value) => _textSpans = value;
-
-  int _maxLines;
-  set maxLines(int value) => _maxLines = value;
 
   static final _defaultParagraphStyle = ui.ParagraphStyle(
     textAlign: ui.TextAlign.left,
@@ -33,10 +26,19 @@ class RichTextParagraphBuilder {
     _textStyle = style.getTextStyle();
   }
 
-  RichTextParagraph build() {
+  RichTextParagraph build(
+      {required List<TextSpan> textSpans,
+      int maxLines = 0,
+      RichTextOverflow overflow = RichTextOverflow.clip,
+      TextSpan? overflowSpan}) {
     _paragraphStyle ??= _defaultParagraphStyle;
     _textStyle ??= _defaultTextStyle;
     return RichTextParagraph(
-        _paragraphStyle!, _textStyle!, _textSpans, _maxLines);
+        paragraphStyle: _paragraphStyle!,
+        textStyle: _textStyle!,
+        textSpans: textSpans,
+        maxLines: maxLines,
+        overflow: overflow,
+        overflowSpan: overflowSpan);
   }
 }

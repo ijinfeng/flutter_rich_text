@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rich_text/core/render_rich_label.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 
 class RichLabel extends LeafRenderObjectWidget {
   final List<TextSpan> children;
-
+  /// 当 overflow = custom时生效
   final TextSpan? overflowSpan;
 
-  final TextOverflow overflow;
+  final RichTextOverflow overflow;
 
   final int maxLines;
 
@@ -15,7 +16,7 @@ class RichLabel extends LeafRenderObjectWidget {
       required this.children,
       this.overflowSpan,
       this.maxLines = 0,
-      this.overflow = TextOverflow.clip})
+      this.overflow = RichTextOverflow.clip})
       : super(key: key);
 
   @override
@@ -27,5 +28,8 @@ class RichLabel extends LeafRenderObjectWidget {
   @override
   void updateRenderObject(BuildContext context, RenderRichLabel renderObject) {
     renderObject.children = children;
+    renderObject.maxLines = maxLines;
+    renderObject.overflow = overflow;
+    renderObject.overflowSpan = overflowSpan;
   }
 }

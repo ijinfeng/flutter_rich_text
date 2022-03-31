@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/rich_text_painter.dart';
 
 class RenderRichLabel extends RenderBox {
-  final TextSpan? overflowSpan;
-  final TextOverflow overflow;
-  final int maxLines;
-
   RenderRichLabel(
       {required List<TextSpan> children,
-      this.overflowSpan,
-      this.maxLines = 0,
-      this.overflow = TextOverflow.clip})
-      : _textPainter = RichTextPainter(children, maxLines);
+      TextSpan? overflowSpan,
+      int maxLines = 0,
+      RichTextOverflow overflow = RichTextOverflow.clip})
+      : _textPainter = RichTextPainter(children, maxLines, overflowSpan, overflow);
 
   final RichTextPainter _textPainter;
 
@@ -19,7 +16,6 @@ class RenderRichLabel extends RenderBox {
     if (value.length != _textPainter.textSpans.length) {
       _textPainter.textSpans = value;
       markNeedsLayout();
-      markNeedsPaint();
       return;
     }
     List<TextSpan> _value = value;
@@ -39,6 +35,24 @@ class RenderRichLabel extends RenderBox {
           break;
       }
     }
+  }
+
+  set overflow(RichTextOverflow overflow) {
+    if (overflow == _textPainter.overflow) return;
+    _textPainter.overflow = overflow;
+    markNeedsPaint();
+  }
+
+  set overflowSpan(TextSpan? overflowSpan) {
+    if (overflowSpan == _textPainter.overflowSpan) return;
+    _textPainter.overflowSpan = overflowSpan;
+    markNeedsLayout();
+  }
+
+  set maxLines(int maxLines) {
+    if (maxLines == _textPainter.maxLines) return;
+    _textPainter.maxLines = maxLines;
+    markNeedsLayout();
   }
 
   void _layoutText({

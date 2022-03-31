@@ -3,18 +3,32 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/text_line.dart';
 import 'package:rich_text/core/text_run.dart';
 
 class RichTextParagraph {
-  RichTextParagraph(
-      this._paragraphStyle, this._textStyle, this._textSpans, this._maxLines);
+  RichTextParagraph({
+    required ui.ParagraphStyle paragraphStyle,
+    required ui.TextStyle textStyle,
+    required List<TextSpan> textSpans,
+    int maxLines = 0,
+    RichTextOverflow overflow = RichTextOverflow.clip,
+    TextSpan? overflowSpan,
+  })  : _paragraphStyle = paragraphStyle,
+        _textStyle = textStyle,
+        _textSpans = textSpans,
+        _maxLines = maxLines,
+        _overflow = overflow,
+        _overflowSpan = overflowSpan;
 
   final ui.ParagraphStyle _paragraphStyle;
   final ui.TextStyle _textStyle;
   final List<TextSpan> _textSpans;
   // 最大行数，0为不限制
   final int _maxLines;
+  final RichTextOverflow _overflow;
+  final TextSpan? _overflowSpan;
 
   double _width = 0;
   double _height = 0;
@@ -99,7 +113,7 @@ class RichTextParagraph {
       }
       final run = _runs[i];
       final double runWidth = run.isTurn ? 0 : run.size.width;
-      final double runHeight = run.isTurn ? 0 :  run.size.height;
+      final double runHeight = run.isTurn ? 0 : run.size.height;
       minLineHeight = math.min(minLineHeight, runHeight);
       maxLineHeight = math.max(maxLineHeight, runHeight);
       if (run.isTurn || lineWidth + runWidth > maxWidth) {

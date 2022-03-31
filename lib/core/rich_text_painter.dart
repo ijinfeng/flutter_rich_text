@@ -1,19 +1,49 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/rich_text_paragraph.dart';
 import 'package:rich_text/core/rich_text_paragraph_builder.dart';
 
 class RichTextPainter {
-  RichTextPainter(List<TextSpan> textSpans, int maxLines) : _textSpans = textSpans, _maxLines = maxLines;
+  RichTextPainter(List<TextSpan> textSpans, int maxLines,
+      TextSpan? overflowSpan, RichTextOverflow overflow)
+      : _textSpans = textSpans,
+        _maxLines = maxLines,
+        _overflowSpan = overflowSpan,
+        _overflow = overflow;
 
   RichTextParagraph? _paragraph;
   bool _needsLayout = true;
 
-  final int _maxLines;
+  int _maxLines;
+  int get maxLines => _maxLines;
+  set maxLines(int value) {
+    if (_maxLines == value) return;
+    _maxLines = value;
+    _paragraph = null;
+    _needsLayout = true;
+  }
+
+  TextSpan? _overflowSpan;
+  TextSpan? get overflowSpan => _overflowSpan;
+  set overflowSpan(TextSpan? value) {
+    if (_overflowSpan == value) return;
+    _overflowSpan = value;
+    _paragraph = null;
+    _needsLayout = true;
+  }
+
+  RichTextOverflow _overflow;
+  RichTextOverflow get overflow => _overflow;
+  set overflow(RichTextOverflow value) {
+    if (_overflow == value) return;
+    _overflow = value;
+    _paragraph = null;
+    _needsLayout = true;
+  }
 
   List<TextSpan> _textSpans;
   List<TextSpan> get textSpans => _textSpans;
-
   set textSpans(List<TextSpan> value) {
     if (_textSpans == value) return;
     _textSpans = value;
@@ -48,16 +78,20 @@ class RichTextPainter {
   double _lastMaxWidth = 0;
   double _lastMaxHeight = 0;
 
-  void layout({double maxWidth = double.infinity, double maxHeight = double.infinity}) {
+  void layout(
+      {double maxWidth = double.infinity, double maxHeight = double.infinity}) {
     if (!_needsLayout &&
         maxWidth == _lastMaxWidth &&
-        maxHeight == _lastMaxHeight && kReleaseMode) return;
+        maxHeight == _lastMaxHeight &&
+        kReleaseMode) return;
     _needsLayout = false;
     if (_paragraph == null) {
       final RichTextParagraphBuilder builder = RichTextParagraphBuilder();
-      builder.maxLines = _maxLines;
-      builder.textSpans = textSpans;
-      _paragraph = builder.build();
+      _paragraph = builder.build(
+          textSpans: textSpans,
+          maxLines: maxLines,
+          overflow: overflow,
+          overflowSpan: overflowSpan);
     }
     _lastMaxWidth = maxWidth;
     _lastMaxHeight = maxHeight;
