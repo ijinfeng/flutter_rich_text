@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rich_text/core/rich_label.dart';
+import 'package:rich_text/core/rich_text_define.dart';
 
 void main() {
   runApp(const MyApp());
@@ -105,52 +106,65 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             RichText(
-              // maxLines: 2,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               text: TextSpan(children: [
                 TextSpan(
                     text:
                         '我是一只卡号发的gg快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                    style: TextStyle(fontSize: 30,
-                    backgroundColor: Colors.lightBlue,
-                    color: Colors.red)),
+                    style: TextStyle(
+                        fontSize: 30,
+                        backgroundColor: Colors.lightBlue,
+                        color: Colors.red)),
                 TextSpan(
                     text: '12314123\t4',
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         print('点击率');
                       },
-                    style: TextStyle(fontSize: 10, 
-                    backgroundColor: Colors.greenAccent,
-                    color: Colors.green))
+                    style: TextStyle(
+                        fontSize: 10,
+                        backgroundColor: Colors.greenAccent,
+                        color: Colors.green))
               ]),
             ),
             SizedBox(
               height: 80,
             ),
-            RichLabel(maxLines: 2, children: [
-              TextSpan(
-                  text: '中文1267这gn你好呀中文1267这gn你好呀',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      print('点击率');
-                    },
-                  style: TextStyle(
-                      // height: 1,
-                      fontSize: 30,
-                      color: Colors.black26,
-                      backgroundColor: Colors.lightBlue)),
-              // TextSpan(
-              //     text:
-              //         '我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-              //     style: TextStyle(fontSize: 20, color: Colors.red)),
-              TextSpan(
-                  text: '123141\n23\t4',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      print('点击率');
-                    },
-                  style: TextStyle(fontSize: 10, color: Colors.green))
-            ]),
+            RichLabel(
+                maxLines: 2,
+                overflowSpan: TextSpan(
+                    text: '展示全部',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    )),
+                overflow: RichTextOverflow.custom,
+                text: TextSpan(text: '头部', children: [
+                  TextSpan(
+                      text:
+                          '中文1267这gn你好中文1267这gn你好呀中文1267这gn你好呀中文1267这gn你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print('点击率');
+                        },
+                      style: TextStyle(
+                          // height: 1,
+                          fontSize: 30,
+                          color: Colors.black26,
+                          backgroundColor: Colors.lightBlue)),
+                  // TextSpan(
+                  //     text:
+                  //         '我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                  //     style: TextStyle(fontSize: 20, color: Colors.red)),
+                  TextSpan(
+                      text: '123141\n23\t4',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print('点击率');
+                        },
+                      style: TextStyle(fontSize: 10, color: Colors.green))
+                ])),
             Container(
               color: Colors.green,
               width: 80,

@@ -1,40 +1,32 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/rich_text_painter.dart';
 
 class RenderRichLabel extends RenderBox {
   RenderRichLabel(
-      {required List<TextSpan> children,
+      {required TextSpan text,
       TextSpan? overflowSpan,
       int maxLines = 0,
       RichTextOverflow overflow = RichTextOverflow.clip})
-      : _textPainter = RichTextPainter(children, maxLines, overflowSpan, overflow);
+      : _textPainter = RichTextPainter(text, maxLines, overflowSpan, overflow);
 
   final RichTextPainter _textPainter;
 
-  set children(List<TextSpan> value) {
-    if (value.length != _textPainter.textSpans.length) {
-      _textPainter.textSpans = value;
-      markNeedsLayout();
-      return;
-    }
-    List<TextSpan> _value = value;
-    List<TextSpan> _textSpans = _textPainter.textSpans;
-    for (int i = 0; i < _value.length; i++) {
-      switch (_value[i].compareTo(_textSpans[i])) {
+  set text(TextSpan value) {
+    switch (_textPainter.text.compareTo(value)) {
         case RenderComparison.identical:
         case RenderComparison.metadata:
           break;
         case RenderComparison.paint:
-          _textPainter.textSpans = value;
+          _textPainter.text = value;
           markNeedsPaint();
           break;
         case RenderComparison.layout:
-          _textPainter.textSpans = value;
+          _textPainter.text = value;
           markNeedsLayout();
           break;
       }
-    }
   }
 
   set overflow(RichTextOverflow overflow) {
@@ -111,7 +103,24 @@ class RenderRichLabel extends RenderBox {
 
   @override
   bool hitTestChildren(BoxHitTestResult result, { required Offset position }) {
-    return false;
+    bool hitText = false;
+    print('点击p = $position');
+    TextPosition textPosition = _textPainter.getPositionForOffset(position);
+    final InlineSpan? span = _textPainter.getSpanForPosition(textPosition);
+    if (span != null && span is HitTestTarget) {
+      result.add(HitTestEntry(span as HitTestTarget));
+      hitText = true;
+    }
+    /*
+    bool hitText = false;
+    final TextPosition textPosition = _textPainter.getPositionForOffset(position);
+    final InlineSpan? span = _textPainter.text!.getSpanForPosition(textPosition);
+    if (span != null && span is HitTestTarget) {
+      result.add(HitTestEntry(span as HitTestTarget));
+      hitText = true;
+    }
+    */
+    return hitText;
   }
 
   @override

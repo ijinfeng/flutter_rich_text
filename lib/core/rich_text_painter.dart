@@ -5,9 +5,9 @@ import 'package:rich_text/core/rich_text_paragraph.dart';
 import 'package:rich_text/core/rich_text_paragraph_builder.dart';
 
 class RichTextPainter {
-  RichTextPainter(List<TextSpan> textSpans, int maxLines,
+  RichTextPainter(TextSpan text, int maxLines,
       TextSpan? overflowSpan, RichTextOverflow overflow)
-      : _textSpans = textSpans,
+      : _text = text,
         _maxLines = maxLines,
         _overflowSpan = overflowSpan,
         _overflow = overflow;
@@ -42,11 +42,11 @@ class RichTextPainter {
     _needsLayout = true;
   }
 
-  List<TextSpan> _textSpans;
-  List<TextSpan> get textSpans => _textSpans;
-  set textSpans(List<TextSpan> value) {
-    if (_textSpans == value) return;
-    _textSpans = value;
+  TextSpan _text;
+  TextSpan get text => _text;
+  set text(TextSpan value) {
+    if (_text == value) return;
+    _text = value;
     _paragraph = null;
     _needsLayout = true;
   }
@@ -75,6 +75,15 @@ class RichTextPainter {
     return Size(width, height);
   }
 
+  TextPosition getPositionForOffset(Offset offset) {
+    assert(_paragraph != null);
+    return _paragraph!.getPositionForOffset(offset);
+  }
+
+  InlineSpan? getSpanForPosition(TextPosition position) {
+    return null;
+  }
+
   double _lastMaxWidth = 0;
   double _lastMaxHeight = 0;
 
@@ -88,7 +97,7 @@ class RichTextPainter {
     if (_paragraph == null) {
       final RichTextParagraphBuilder builder = RichTextParagraphBuilder();
       _paragraph = builder.build(
-          textSpans: textSpans,
+          text: text,
           maxLines: maxLines,
           overflow: overflow,
           overflowSpan: overflowSpan);

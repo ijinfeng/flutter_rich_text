@@ -3,7 +3,7 @@ import 'package:rich_text/core/render_rich_label.dart';
 import 'package:rich_text/core/rich_text_define.dart';
 
 class RichLabel extends LeafRenderObjectWidget {
-  final List<TextSpan> children;
+  final TextSpan text;
   /// 当 overflow = custom时生效
   final TextSpan? overflowSpan;
 
@@ -13,7 +13,7 @@ class RichLabel extends LeafRenderObjectWidget {
 
   const RichLabel(
       {Key? key,
-      required this.children,
+      required this.text,
       this.overflowSpan,
       this.maxLines = 0,
       this.overflow = RichTextOverflow.clip})
@@ -22,12 +22,12 @@ class RichLabel extends LeafRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderRichLabel(
-        children: children, overflowSpan: overflowSpan, maxLines: maxLines);
+        text: text, overflowSpan: overflowSpan, maxLines: maxLines);
   }
 
   @override
   void updateRenderObject(BuildContext context, RenderRichLabel renderObject) {
-    renderObject.children = children;
+    renderObject.text = text;
     renderObject.maxLines = maxLines;
     renderObject.overflow = overflow;
     renderObject.overflowSpan = overflowSpan;

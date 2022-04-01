@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rich_text/core/rich_text_define.dart';
+import 'package:rich_text/core/rich_text_overflow.dart';
 import 'package:rich_text/core/text_line.dart';
 import 'package:rich_text/core/text_run.dart';
 
@@ -11,24 +12,24 @@ class RichTextParagraph {
   RichTextParagraph({
     required ui.ParagraphStyle paragraphStyle,
     required TextStyle textStyle,
-    required List<TextSpan> textSpans,
+    required TextSpan text,
     int maxLines = 0,
     RichTextOverflow overflow = RichTextOverflow.clip,
     TextSpan? overflowSpan,
   })  : _paragraphStyle = paragraphStyle,
         _textStyle = textStyle,
-        _textSpans = textSpans,
+        _text = text,
         _maxLines = maxLines,
-        _overflow = overflow,
-        _overflowSpan = overflowSpan;
+        _overflowSpan = RichTextOverflowSpan(
+            overflow, overflowSpan, paragraphStyle, textStyle)
+          ..build();
 
   final ui.ParagraphStyle _paragraphStyle;
   final TextStyle _textStyle;
-  final List<TextSpan> _textSpans;
+  final TextSpan _text;
   // 最大行数，0为不限制
   final int _maxLines;
-  final RichTextOverflow _overflow;
-  TextSpan? _overflowSpan;
+  final RichTextOverflowSpan _overflowSpan;
 
   double _width = 0;
   double _height = 0;
@@ -57,40 +58,33 @@ class RichTextParagraph {
     _calculateHeight();
     _calculateWidth();
     _calculateIntrinsicWidth();
-
-    print("There are ${_runs.length} runs.");
-    print("There are ${_lines.length} lines.");
-    print("width=$width height=$height");
-    print("min=$minIntrinsicWidth max=$maxIntrinsicWidth");
   }
 
-  void _setupOverflowSpan() {
-    if (_textSpans.isEmpty) return;
-    if (_overflow == RichTextOverflow.clip) return;
-    if (_overflow == RichTextOverflow.ellipsis || (
-      _overflow == RichTextOverflow.custom && _overflowSpan == null
-    )) {
-      TextSpan lastTextSpan = _textSpans.last;
-      TextStyle style = lastTextSpan.style ?? _textStyle;
-      _overflowSpan = TextSpan(
-        text: '…',
-        style: style
-      );
-    }
-  }
+  void _setupOverflowSpan() {}
 
   final List<RichTextRun> _runs = [];
   // 收集每个文字
   void _calculateRuns() {
     if (_runs.isNotEmpty) return;
 
-    for (var textSpan in _textSpans) {
-      if (textSpan.text != null) {
-        String text = textSpan.text!;
-        int positon = 0;
-        for (int i = 0; i < text.length; i++) {
-          _addRun(positon, text, textSpan.style ?? _textStyle);
-          positon += 1;
+    if (_text.text != null) {
+      String text = _text.text!;
+      int positon = 0;
+      for (int i = 0; i < text.length; i++) {
+        _addRun(positon, text, _text.style ?? _textStyle);
+        positon += 1;
+      }
+    }
+
+    if (_text.children != null) {
+      for (var textSpan in _text.children!) {
+        if (textSpan is TextSpan && textSpan.text != null) {
+          String text = textSpan.text!;
+          int positon = 0;
+          for (int i = 0; i < text.length; i++) {
+            _addRun(positon, text, textSpan.style ?? _textStyle);
+            positon += 1;
+          }
         }
       }
     }
@@ -106,7 +100,8 @@ class RichTextParagraph {
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
     final run = RichTextRun(runText, position, paragraph);
     _runs.add(run);
-    print('run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
+    print(
+        'run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
   }
 
   final List<RichTextLine> _lines = [];
@@ -190,16 +185,37 @@ class RichTextParagraph {
     _maxIntrinsicWidth = sum;
   }
 
+  ui.TextPosition getPositionForOffset(ui.Offset position) {
+    return ui.TextPosition(offset: 0);
+  }
+
   void draw(Canvas canvas, Offset offset) {
     canvas.save();
 
     canvas.translate(offset.dx, offset.dy);
 
-    for (var line in _lines) {
+    for (int i = 0; i < _lines.length; i++) {
+      var line = _lines[i];
       double dx = 0;
       double maxLineHeight = line.maxLineHeight;
-      for (int i = 0; i < line.runs.length; i++) {
-        final run = line.runs[i];
+      // 记录除去截断符后，所能到达的最大行宽
+      double maxOverlowLineWidth = 0;
+      for (int j = 0; j < line.runs.length; j++) {
+        final run = line.runs[j];
+        // 最后一行，并且有截断符
+        if (i == _lines.length - 1 && _overflowSpan.hasOverflowSpan) {
+          if (run.size.width + maxOverlowLineWidth + _overflowSpan.size.width <
+              _width) {
+            maxOverlowLineWidth += run.size.width;
+          } else {
+            // 需要绘制截断符
+            assert(_overflowSpan.paragraph != null);
+            canvas.drawParagraph(_overflowSpan.paragraph!,
+                Offset(dx, (maxLineHeight - _overflowSpan.size.height) / 2));
+            break;
+          }
+        }
+
         canvas.drawParagraph(
             run.paragraph, Offset(dx, (maxLineHeight - run.size.height) / 2));
         dx += run.size.width;

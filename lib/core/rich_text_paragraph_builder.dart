@@ -31,7 +31,7 @@ class RichTextParagraphBuilder {
   }
 
   RichTextParagraph build(
-      {required List<TextSpan> textSpans,
+      {required TextSpan text,
       int maxLines = 0,
       RichTextOverflow overflow = RichTextOverflow.clip,
       TextSpan? overflowSpan}) {
@@ -39,7 +39,7 @@ class RichTextParagraphBuilder {
     return RichTextParagraph(
         paragraphStyle: _paragraphStyle!,
         textStyle: textStyle,
-        textSpans: textSpans,
+        text: text,
         maxLines: maxLines,
         overflow: overflow,
         overflowSpan: overflowSpan);
