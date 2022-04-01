@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rich_text/core/rich_text_define.dart';
 import 'package:rich_text/core/rich_text_painter.dart';
 
@@ -102,6 +102,16 @@ class RenderRichLabel extends RenderBox {
     assert(constraints.debugAssertIsValid());
     _layoutTextWithConstraints(constraints);
     return _textPainter.height;
+  }
+
+  @override
+  bool hitTestSelf(Offset position) {
+    return true;
+  }
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, { required Offset position }) {
+    return false;
   }
 
   @override

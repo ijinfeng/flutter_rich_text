@@ -8,7 +8,7 @@ class RichTextParagraphBuilder {
       : _paragraphStyle = style;
   // 默认样式
   ui.ParagraphStyle? _paragraphStyle;
-  ui.TextStyle? _textStyle;
+  TextStyle? _textStyle;
 
   static final _defaultParagraphStyle = ui.ParagraphStyle(
     textAlign: ui.TextAlign.left,
@@ -16,14 +16,18 @@ class RichTextParagraphBuilder {
     fontSize: 16,
   );
 
-  static final _defaultTextStyle = ui.TextStyle(
-    color: const Color(0xFF000000),
+  static const _defaultTTextStyle = TextStyle(
+    color: Color(0xFF000000),
     textBaseline: TextBaseline.alphabetic,
     fontSize: 16,
   );
 
   set textStyle(TextStyle style) {
-    _textStyle = style.getTextStyle();
+    _textStyle = style;
+  }
+
+  TextStyle get textStyle {
+    return _textStyle ?? _defaultTTextStyle;
   }
 
   RichTextParagraph build(
@@ -32,10 +36,9 @@ class RichTextParagraphBuilder {
       RichTextOverflow overflow = RichTextOverflow.clip,
       TextSpan? overflowSpan}) {
     _paragraphStyle ??= _defaultParagraphStyle;
-    _textStyle ??= _defaultTextStyle;
     return RichTextParagraph(
         paragraphStyle: _paragraphStyle!,
-        textStyle: _textStyle!,
+        textStyle: textStyle,
         textSpans: textSpans,
         maxLines: maxLines,
         overflow: overflow,

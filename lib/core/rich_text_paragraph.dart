@@ -10,7 +10,7 @@ import 'package:rich_text/core/text_run.dart';
 class RichTextParagraph {
   RichTextParagraph({
     required ui.ParagraphStyle paragraphStyle,
-    required ui.TextStyle textStyle,
+    required TextStyle textStyle,
     required List<TextSpan> textSpans,
     int maxLines = 0,
     RichTextOverflow overflow = RichTextOverflow.clip,
@@ -23,12 +23,12 @@ class RichTextParagraph {
         _overflowSpan = overflowSpan;
 
   final ui.ParagraphStyle _paragraphStyle;
-  final ui.TextStyle _textStyle;
+  final TextStyle _textStyle;
   final List<TextSpan> _textSpans;
   // 最大行数，0为不限制
   final int _maxLines;
   final RichTextOverflow _overflow;
-  final TextSpan? _overflowSpan;
+  TextSpan? _overflowSpan;
 
   double _width = 0;
   double _height = 0;
@@ -51,6 +51,7 @@ class RichTextParagraph {
 
   void _layout(double maxWidth, double maxHeight) {
     if (maxWidth == _width && maxHeight == _height) return;
+    _setupOverflowSpan();
     _calculateRuns();
     _calculateLines(maxWidth, maxHeight);
     _calculateHeight();
@@ -63,6 +64,21 @@ class RichTextParagraph {
     print("min=$minIntrinsicWidth max=$maxIntrinsicWidth");
   }
 
+  void _setupOverflowSpan() {
+    if (_textSpans.isEmpty) return;
+    if (_overflow == RichTextOverflow.clip) return;
+    if (_overflow == RichTextOverflow.ellipsis || (
+      _overflow == RichTextOverflow.custom && _overflowSpan == null
+    )) {
+      TextSpan lastTextSpan = _textSpans.last;
+      TextStyle style = lastTextSpan.style ?? _textStyle;
+      _overflowSpan = TextSpan(
+        text: '…',
+        style: style
+      );
+    }
+  }
+
   final List<RichTextRun> _runs = [];
   // 收集每个文字
   void _calculateRuns() {
@@ -71,25 +87,26 @@ class RichTextParagraph {
     for (var textSpan in _textSpans) {
       if (textSpan.text != null) {
         String text = textSpan.text!;
-        ui.TextStyle style = textSpan.style?.getTextStyle() ?? _textStyle;
         int positon = 0;
         for (int i = 0; i < text.length; i++) {
-          _addRun(positon, text, style);
+          _addRun(positon, text, textSpan.style ?? _textStyle);
           positon += 1;
         }
       }
     }
   }
 
-  void _addRun(int position, String text, ui.TextStyle style) {
+  void _addRun(int position, String text, TextStyle style) {
     String runText = text.substring(position, position + 1);
+    ui.TextStyle _style = style.getTextStyle();
     final builder = ui.ParagraphBuilder(_paragraphStyle)
-      ..pushStyle(style)
+      ..pushStyle(_style)
       ..addText(runText);
     final paragraph = builder.build();
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
     final run = RichTextRun(runText, position, paragraph);
     _runs.add(run);
+    print('run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
   }
 
   final List<RichTextLine> _lines = [];
@@ -184,7 +201,7 @@ class RichTextParagraph {
       for (int i = 0; i < line.runs.length; i++) {
         final run = line.runs[i];
         canvas.drawParagraph(
-            run.paragraph, Offset(dx, maxLineHeight - run.size.height));
+            run.paragraph, Offset(dx, (maxLineHeight - run.size.height) / 2));
         dx += run.size.width;
       }
       canvas.translate(0, line.bounds.height);

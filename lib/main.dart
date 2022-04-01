@@ -105,32 +105,51 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             RichText(
-              text: TextSpan(
-              children: [
+              // maxLines: 2,
+              text: TextSpan(children: [
                 TextSpan(
-                  text:
-                      '我是一只卡号发的快回复爱对方123124nkasf的快回',
-                  style: TextStyle(fontSize: 20, color: Colors.red)),
+                    text:
+                        '我是一只卡号发的gg快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                    style: TextStyle(fontSize: 30,
+                    backgroundColor: Colors.lightBlue,
+                    color: Colors.red)),
+                TextSpan(
+                    text: '12314123\t4',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print('点击率');
+                      },
+                    style: TextStyle(fontSize: 10, 
+                    backgroundColor: Colors.greenAccent,
+                    color: Colors.green))
+              ]),
+            ),
+            SizedBox(
+              height: 80,
+            ),
+            RichLabel(maxLines: 2, children: [
               TextSpan(
-                  text: '\n12314123\t4',
-                  recognizer: TapGestureRecognizer()..onTap = () {
-                    print('点击率');
-                  },
-                  style: TextStyle(fontSize: 30, color: Colors.green))
-              ]
-            ),),
-            SizedBox(height: 80,),
-             RichLabel(children: [
+                  text: '中文1267这gn你好呀中文1267这gn你好呀',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      print('点击率');
+                    },
+                  style: TextStyle(
+                      // height: 1,
+                      fontSize: 30,
+                      color: Colors.black26,
+                      backgroundColor: Colors.lightBlue)),
+              // TextSpan(
+              //     text:
+              //         '我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+              //     style: TextStyle(fontSize: 20, color: Colors.red)),
               TextSpan(
-                  text:
-                      '我是一只卡号发的快回复爱对方123124nkasf的快回',
-                  style: TextStyle(fontSize: 20, color: Colors.red)),
-              TextSpan(
-                  text: '\n12314123\t4',
-                  recognizer: TapGestureRecognizer()..onTap = () {
-                    print('点击率');
-                  },
-                  style: TextStyle(fontSize: 30, color: Colors.green))
+                  text: '123141\n23\t4',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      print('点击率');
+                    },
+                  style: TextStyle(fontSize: 10, color: Colors.green))
             ]),
             Container(
               color: Colors.green,
