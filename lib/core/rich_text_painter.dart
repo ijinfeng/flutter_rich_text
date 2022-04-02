@@ -75,13 +75,8 @@ class RichTextPainter {
     return Size(width, height);
   }
 
-  TextPosition getPositionForOffset(Offset offset) {
-    assert(_paragraph != null);
-    return _paragraph!.getPositionForOffset(offset);
-  }
-
-  InlineSpan? getSpanForPosition(TextPosition position) {
-    return null;
+  InlineSpan? getSpanForPosition(Offset position) {
+    return _paragraph?.getSpanForPosition(position);
   }
 
   double _lastMaxWidth = 0;

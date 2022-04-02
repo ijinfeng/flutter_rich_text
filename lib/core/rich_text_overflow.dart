@@ -9,7 +9,9 @@ class RichTextOverflowSpan {
       : _overflow = overflow,
         _overflowSpan = overflowSpan,
         _paragraphStyle = paragraphStyle,
-        _textStyle = textStyle;
+        _textStyle = textStyle,
+        offset = Offset.zero, 
+        drawed = false;
 
   final RichTextOverflow _overflow;
   RichTextOverflow get overflow => _overflow;
@@ -48,7 +50,7 @@ class RichTextOverflowSpan {
         break;
       default:
     }
-    
+
     ui.TextStyle _ustyle = _tstyle.getTextStyle();
     final builder = ui.ParagraphBuilder(_paragraphStyle)
       ..pushStyle(_ustyle)
@@ -65,4 +67,8 @@ class RichTextOverflowSpan {
   double _height = 0;
 
   Size get size => Size(_width, _height);
+
+  Offset offset;
+
+  bool drawed;
 }

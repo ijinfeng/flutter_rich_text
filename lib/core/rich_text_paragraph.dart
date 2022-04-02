@@ -67,30 +67,30 @@ class RichTextParagraph {
   void _calculateRuns() {
     if (_runs.isNotEmpty) return;
 
-    if (_text.text != null) {
-      String text = _text.text!;
-      int positon = 0;
-      for (int i = 0; i < text.length; i++) {
-        _addRun(positon, text, _text.style ?? _textStyle);
-        positon += 1;
-      }
-    }
+    void deepCollectTextSpan(TextSpan text) {
+      if (text.text != null) {
+        String simpleText = text.text!;
+        for (int i = 0; i < simpleText.length; i++) {
+          _addRun(i, text.style ?? _textStyle, text);
+        }
 
-    if (_text.children != null) {
-      for (var textSpan in _text.children!) {
-        if (textSpan is TextSpan && textSpan.text != null) {
-          String text = textSpan.text!;
-          int positon = 0;
-          for (int i = 0; i < text.length; i++) {
-            _addRun(positon, text, textSpan.style ?? _textStyle);
-            positon += 1;
+        if (text.children != null) {
+          for (var child in text.children!) {
+            assert(child is TextSpan, 'Only the TextSpan type is supported');
+            if (child is TextSpan) {
+              deepCollectTextSpan(child);
+            }
           }
         }
       }
     }
+
+    deepCollectTextSpan(_text);
   }
 
-  void _addRun(int position, String text, TextStyle style) {
+  void _addRun(int position, TextStyle style, TextSpan below) {
+    assert(below.text != null);
+    String text = below.text!;
     String runText = text.substring(position, position + 1);
     ui.TextStyle _style = style.getTextStyle();
     final builder = ui.ParagraphBuilder(_paragraphStyle)
@@ -98,10 +98,9 @@ class RichTextParagraph {
       ..addText(runText);
     final paragraph = builder.build();
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
-    final run = RichTextRun(runText, position, paragraph);
+    final run = RichTextRun(runText, position, paragraph, below);
     _runs.add(run);
-    print(
-        'run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
+    // print('run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
   }
 
   final List<RichTextLine> _lines = [];
@@ -150,7 +149,13 @@ class RichTextParagraph {
   void _addLine(List<RichTextRun> runs, double width, double height,
       double minHeight, double maxHeight) {
     if (runs.isEmpty) return;
-    final bounds = Rect.fromLTRB(0, 0, width, height);
+    double dy = 0;
+    int numberOfLines = _lines.length;
+    if (numberOfLines > 0) {
+      Rect bounds = _lines[numberOfLines - 1].bounds;
+      dy = bounds.height + bounds.top;
+    }
+    final bounds = Rect.fromLTWH(0, dy, width, height);
     final RichTextLine lineInfo = RichTextLine(runs, bounds);
     lineInfo.minLineHeight = minHeight;
     lineInfo.maxLineHeight = maxHeight;
@@ -185,8 +190,32 @@ class RichTextParagraph {
     _maxIntrinsicWidth = sum;
   }
 
-  ui.TextPosition getPositionForOffset(ui.Offset position) {
-    return ui.TextPosition(offset: 0);
+  InlineSpan? getSpanForPosition(Offset position) {
+    // print('======》当前点击位置：$position, size=${Size(_width, _height)}');
+    for (int i = 0; i < _lines.length; i++) {
+      var line = _lines[i];
+      if (line.bounds.contains(position)) {
+        // print('-----找到行$i');
+        for (var run in line.runs) {
+          Rect bounds = Rect.fromLTWH(run.offset.dx,
+              run.offset.dy + line.bounds.top, run.size.width, run.size.height);
+          if (run.drawed && bounds.contains(position)) {
+            // print("已找到，字(${run.text})，所在的bounds=$bounds，返回:${run.textSpan.text}");
+            return run.textSpan;
+          }
+        }
+      }
+    }
+
+    if (_overflowSpan.hasOverflowSpan && _lines.isNotEmpty) {
+      var line = _lines[_lines.length - 1];
+      Rect bounds = Rect.fromLTWH(_overflowSpan.offset.dx,
+              _overflowSpan.offset.dy + line.bounds.top, _overflowSpan.size.width, _overflowSpan.size.height);
+      if (bounds.contains(position)) {
+        return _overflowSpan.overflowSpan;
+      }
+    }
+    return null;
   }
 
   void draw(Canvas canvas, Offset offset) {
@@ -210,14 +239,19 @@ class RichTextParagraph {
           } else {
             // 需要绘制截断符
             assert(_overflowSpan.paragraph != null);
-            canvas.drawParagraph(_overflowSpan.paragraph!,
-                Offset(dx, (maxLineHeight - _overflowSpan.size.height) / 2));
+            Offset offset =
+                Offset(dx, (maxLineHeight - _overflowSpan.size.height) / 2);
+            _overflowSpan.offset = offset;
+            _overflowSpan.drawed = true;
+            canvas.drawParagraph(_overflowSpan.paragraph!, offset);
             break;
           }
         }
 
-        canvas.drawParagraph(
-            run.paragraph, Offset(dx, (maxLineHeight - run.size.height) / 2));
+        Offset offset = Offset(dx, (maxLineHeight - run.size.height) / 2);
+        run.offset = offset;
+        run.drawed = true;
+        canvas.drawParagraph(run.paragraph, offset);
         dx += run.size.width;
       }
       canvas.translate(0, line.bounds.height);

@@ -1,13 +1,17 @@
 import 'dart:ui' show Paragraph, Size;
 
-class RichTextRun {
-  RichTextRun(this.text, this.position, this.paragraph)
-      : _width = paragraph.maxIntrinsicWidth,
-        _height = paragraph.height;
+import 'package:flutter/material.dart';
 
-  String text;
-  int position;
-  Paragraph paragraph;
+class RichTextRun {
+  RichTextRun(this.text, this.position, this.paragraph, this.textSpan)
+      : _width = paragraph.maxIntrinsicWidth,
+        _height = paragraph.height,
+        offset = Offset.zero,
+        drawed = false;
+
+  final String text;
+  final int position;
+  final Paragraph paragraph;
 
   final double _width;
   final double _height;
@@ -22,4 +26,12 @@ class RichTextRun {
 
   /// 是否是回车
   bool get isReturn => text == '\r';
+
+  /// 归属于哪个TextSpan
+  final TextSpan textSpan;
+
+  Offset offset;
+
+  /// 是否被绘制
+  bool drawed;
 }

@@ -104,9 +104,7 @@ class RenderRichLabel extends RenderBox {
   @override
   bool hitTestChildren(BoxHitTestResult result, { required Offset position }) {
     bool hitText = false;
-    print('点击p = $position');
-    TextPosition textPosition = _textPainter.getPositionForOffset(position);
-    final InlineSpan? span = _textPainter.getSpanForPosition(textPosition);
+    final InlineSpan? span = _textPainter.getSpanForPosition(position);
     if (span != null && span is HitTestTarget) {
       result.add(HitTestEntry(span as HitTestTarget));
       hitText = true;

@@ -53,6 +53,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  bool fold = true;
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -131,40 +133,60 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(
               height: 80,
             ),
-            RichLabel(
-                maxLines: 2,
-                overflowSpan: TextSpan(
-                    text: '展示全部',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    )),
-                overflow: RichTextOverflow.custom,
-                text: TextSpan(text: '头部', children: [
-                  TextSpan(
-                      text:
-                          '中文1267这gn你好中文1267这gn你好呀中文1267这gn你好呀中文1267这gn你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: RichLabel(
+                  maxLines: fold ? 2 : 0,
+                  overflowSpan: TextSpan(
+                      text: '展示全部',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('点击率');
+                          print('点击展开全部');
+                          setState(() {
+                            fold = !fold;
+                          });
                         },
                       style: TextStyle(
-                          // height: 1,
-                          fontSize: 30,
-                          color: Colors.black26,
-                          backgroundColor: Colors.lightBlue)),
-                  // TextSpan(
-                  //     text:
-                  //         '我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                  //     style: TextStyle(fontSize: 20, color: Colors.red)),
-                  TextSpan(
-                      text: '123141\n23\t4',
+                        color: Colors.black,
+                        fontSize: 20,
+                      )),
+                  overflow: RichTextOverflow.custom,
+                  text: TextSpan(
+                      text: '头部',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('点击率');
+                          print("点击头部！！");
                         },
-                      style: TextStyle(fontSize: 10, color: Colors.green))
-                ])),
+                      children: [
+                        TextSpan(
+                            text: '中文1267这gn你好n你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('点击中文1267++++++');
+                              },
+                            style: TextStyle(
+                                // height: 1,
+                                fontSize: 30,
+                                color: Colors.black26,
+                                backgroundColor: Colors.lightBlue)),
+                        // TextSpan(
+                        //     text:
+                        //         '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                        //     style: TextStyle(fontSize: 20, color: Colors.red)),
+                        WidgetSpan(child: Container(
+                          width: 60,
+                          height: 30,
+                          color: Colors.yellow,
+                        )),
+                        TextSpan(
+                            text: '123141\n23\t4',
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('点击数字-------');
+                              },
+                            style: TextStyle(fontSize: 10, color: Colors.green))
+                      ])),
+            ),
             Container(
               color: Colors.green,
               width: 80,
