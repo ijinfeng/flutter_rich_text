@@ -173,11 +173,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         //     text:
                         //         '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
                         //     style: TextStyle(fontSize: 20, color: Colors.red)),
-                        WidgetSpan(child: Container(
-                          width: 60,
-                          height: 30,
-                          color: Colors.yellow,
-                        )),
                         TextSpan(
                             text: '123141\n23\t4',
                             recognizer: TapGestureRecognizer()

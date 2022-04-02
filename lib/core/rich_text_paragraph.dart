@@ -73,8 +73,8 @@ class RichTextParagraph {
         for (int i = 0; i < simpleText.length; i++) {
           _addRun(i, text.style ?? _textStyle, text);
         }
-
-        if (text.children != null) {
+      }
+      if (text.children != null) {
           for (var child in text.children!) {
             assert(child is TextSpan, 'Only the TextSpan type is supported');
             if (child is TextSpan) {
@@ -82,9 +82,7 @@ class RichTextParagraph {
             }
           }
         }
-      }
     }
-
     deepCollectTextSpan(_text);
   }
 
