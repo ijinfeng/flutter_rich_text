@@ -105,19 +105,47 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              strutStyle: StrutStyle(
+                leading: 0,
+                // height: 0,
+              ),
+              style: TextStyle(
+                        fontSize: 30,
+                        backgroundColor: Colors.lightGreen,
+                        // textBaseline: TextBaseline.ideographic,
+                        color: Colors.black),
             ),
+            Container(
+                  color: Colors.blue,
+                  child: new Text(
+                    "Hg",
+                    style: TextStyle(
+                      fontSize: 100,
+                      backgroundColor: Colors.green.withAlpha(180)
+                    ),
+                    strutStyle: StrutStyle(
+                      forceStrutHeight: true,
+                      fontSize: 100,
+                      height: 1,
+                    ),
+
+                  ),
+
+                ),
             RichText(
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              maxLines: null,
+              // overflow: TextOverflow.ellipsis,
               text: TextSpan(children: [
                 TextSpan(
                     text:
-                        '我是一只卡号发的gg快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                        '我是一只卡号发的gabfcq',
                     style: TextStyle(
                         fontSize: 30,
+                        // height: 1,
                         backgroundColor: Colors.lightBlue,
-                        color: Colors.red)),
+                        textBaseline: TextBaseline.ideographic,
+                        color: Colors.red)
+                        ),
                 TextSpan(
                     text: '12314123\t4',
                     recognizer: TapGestureRecognizer()
@@ -126,6 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     style: TextStyle(
                         fontSize: 10,
+                        // height: 1,
                         backgroundColor: Colors.greenAccent,
                         color: Colors.green))
               ]),

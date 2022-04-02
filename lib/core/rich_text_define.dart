@@ -9,7 +9,4 @@ enum RichTextOverflow {
 
   /// 自定义的截断符
   custom,
-
-  /// 当`overflow`为`custom`时，`…`会随着自定义的截断符一起出现
-  both,
 }

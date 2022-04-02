@@ -1,4 +1,4 @@
-import 'dart:ui' show Paragraph, Size;
+import 'dart:ui' show Paragraph, Size, LineMetrics;
 
 import 'package:flutter/material.dart';
 
@@ -6,12 +6,19 @@ class RichTextRun {
   RichTextRun(this.text, this.position, this.paragraph, this.textSpan)
       : _width = paragraph.maxIntrinsicWidth,
         _height = paragraph.height,
+        _line = paragraph.computeLineMetrics().first,
         offset = Offset.zero,
         drawed = false;
 
   final String text;
   final int position;
   final Paragraph paragraph;
+
+  final LineMetrics _line;
+
+  double get ascent => _line.ascent;
+  double get descent => _line.descent;
+  double get baseline => _line.baseline;
 
   final double _width;
   final double _height;

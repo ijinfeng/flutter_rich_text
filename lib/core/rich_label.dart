@@ -5,7 +5,7 @@ import 'package:rich_text/core/rich_text_define.dart';
 class RichLabel extends LeafRenderObjectWidget {
   final TextSpan text;
 
-  /// 当 overflow = custom时生效
+  /// 当`overflow`为`custom`时生效
   final TextSpan? overflowSpan;
 
   final RichTextOverflow overflow;

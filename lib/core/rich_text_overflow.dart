@@ -10,7 +10,7 @@ class RichTextOverflowSpan {
         _overflowSpan = overflowSpan,
         _paragraphStyle = paragraphStyle,
         _textStyle = textStyle,
-        offset = Offset.zero, 
+        offset = Offset.zero,
         drawed = false;
 
   final RichTextOverflow _overflow;
@@ -55,6 +55,17 @@ class RichTextOverflowSpan {
     final builder = ui.ParagraphBuilder(_paragraphStyle)
       ..pushStyle(_ustyle)
       ..addText(overflowText);
+    if (overflow == RichTextOverflow.custom && overflowSpan?.children != null) {
+      for (var child in overflowSpan!.children!) {
+        assert(child is TextSpan);
+        if (child is TextSpan && child.text != null) {
+          TextStyle style = child.style ?? _textStyle;
+          builder
+            ..pushStyle(style.getTextStyle())
+            ..addText(child.text!);
+        }
+      }
+    }
     final paragraph = builder.build();
     _paragraph = paragraph;
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));

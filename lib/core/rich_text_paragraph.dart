@@ -98,6 +98,9 @@ class RichTextParagraph {
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
     final run = RichTextRun(runText, position, paragraph, below);
     _runs.add(run);
+
+    // var line = run.paragraph.computeLineMetrics().first;
+    // print('run=${run.text}, ${line}, ${run.paragraph.ideographicBaseline}, ${run.size.height}');
     // print('run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
   }
 
@@ -111,6 +114,7 @@ class RichTextParagraph {
     double minLineHeight = double.infinity;
     double maxLineHeight = 0;
     double totalLineHeight = 0;
+    double maxLineAscent = 0, maxLineDecent = 0;
     List<RichTextRun> runs = [];
     for (int i = 0; i < _runs.length; i++) {
       if (_maxLines > 0 && _lines.length >= _maxLines) {
@@ -125,9 +129,11 @@ class RichTextParagraph {
       final double runHeight = run.isTurn ? 0 : run.size.height;
       minLineHeight = math.min(minLineHeight, runHeight);
       maxLineHeight = math.max(maxLineHeight, runHeight);
+      maxLineAscent = math.max(maxLineAscent, run.ascent);
+      maxLineDecent = math.max(maxLineDecent, run.descent);
       if (run.isTurn || lineWidth + runWidth > maxWidth) {
         // 换行
-        _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight);
+        _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
         totalLineHeight += lineHeight;
         lineWidth = runWidth;
         lineHeight = runHeight;
@@ -141,11 +147,11 @@ class RichTextParagraph {
         runs.add(run);
       }
     }
-    _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight);
+    _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
   }
 
   void _addLine(List<RichTextRun> runs, double width, double height,
-      double minHeight, double maxHeight) {
+      double minHeight, double maxHeight, double maxLineAscent, maxLineDecent) {
     if (runs.isEmpty) return;
     double dy = 0;
     int numberOfLines = _lines.length;
@@ -157,6 +163,8 @@ class RichTextParagraph {
     final RichTextLine lineInfo = RichTextLine(runs, bounds);
     lineInfo.minLineHeight = minHeight;
     lineInfo.maxLineHeight = maxHeight;
+    lineInfo.maxLineAscent = maxLineAscent;
+    lineInfo.maxLineDecent = maxLineDecent;
     _lines.add(lineInfo);
   }
 
