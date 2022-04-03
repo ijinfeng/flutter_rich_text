@@ -11,7 +11,7 @@ class RichTextOverflowSpan {
         _paragraphStyle = paragraphStyle,
         _textStyle = textStyle,
         offset = Offset.zero,
-        drawed = false;
+        _drawed = false;
 
   final RichTextOverflow _overflow;
   RichTextOverflow get overflow => _overflow;
@@ -72,14 +72,29 @@ class RichTextOverflowSpan {
 
     _width = paragraph.maxIntrinsicWidth;
     _height = paragraph.height;
+    _line = paragraph.computeLineMetrics().first;
   }
+
+  late ui.LineMetrics _line;
 
   double _width = 0;
   double _height = 0;
 
   Size get size => Size(_width, _height);
 
+  double get ascent => _line.ascent;
+  double get descent => _line.descent;
+  double get baseline => _line.baseline;
+
   Offset offset;
 
-  bool drawed;
+  bool _drawed;
+  bool get drawed => _drawed;
+
+  void draw(Canvas canvas, Offset offset) {
+    if (drawed || paragraph == null) return;
+    _drawed = true;
+    this.offset = offset;
+    canvas.drawParagraph(paragraph!, offset);
+  }
 }

@@ -133,7 +133,7 @@ class RichTextParagraph {
       maxLineDecent = math.max(maxLineDecent, run.descent);
       if (run.isTurn || lineWidth + runWidth > maxWidth) {
         // 换行
-        _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
+        _addLine(runs, maxWidth, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
         totalLineHeight += lineHeight;
         lineWidth = runWidth;
         lineHeight = runHeight;
@@ -147,10 +147,10 @@ class RichTextParagraph {
         runs.add(run);
       }
     }
-    _addLine(runs, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
+    _addLine(runs, maxWidth, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
   }
 
-  void _addLine(List<RichTextRun> runs, double width, double height,
+  void _addLine(List<RichTextRun> runs, double maxWidth, double width, double height,
       double minHeight, double maxHeight, double maxLineAscent, maxLineDecent) {
     if (runs.isEmpty) return;
     double dy = 0;
@@ -160,7 +160,7 @@ class RichTextParagraph {
       dy = bounds.height + bounds.top;
     }
     final bounds = Rect.fromLTWH(0, dy, width, height);
-    final RichTextLine lineInfo = RichTextLine(runs, bounds);
+    final RichTextLine lineInfo = RichTextLine(runs, bounds, maxWidth);
     lineInfo.minLineHeight = minHeight;
     lineInfo.maxLineHeight = maxHeight;
     lineInfo.maxLineAscent = maxLineAscent;
@@ -231,35 +231,36 @@ class RichTextParagraph {
 
     for (int i = 0; i < _lines.length; i++) {
       var line = _lines[i];
-      double dx = 0;
-      double maxLineHeight = line.maxLineHeight;
-      // 记录除去截断符后，所能到达的最大行宽
-      double maxOverlowLineWidth = 0;
-      for (int j = 0; j < line.runs.length; j++) {
-        final run = line.runs[j];
-        // 最后一行，并且有截断符
-        if (i == _lines.length - 1 && _overflowSpan.hasOverflowSpan) {
-          if (run.size.width + maxOverlowLineWidth + _overflowSpan.size.width <
-              _width) {
-            maxOverlowLineWidth += run.size.width;
-          } else {
-            // 需要绘制截断符
-            assert(_overflowSpan.paragraph != null);
-            Offset offset =
-                Offset(dx, (maxLineHeight - _overflowSpan.size.height) / 2);
-            _overflowSpan.offset = offset;
-            _overflowSpan.drawed = true;
-            canvas.drawParagraph(_overflowSpan.paragraph!, offset);
-            break;
-          }
-        }
-
-        Offset offset = Offset(dx, (maxLineHeight - run.size.height) / 2);
-        run.offset = offset;
-        run.drawed = true;
-        canvas.drawParagraph(run.paragraph, offset);
-        dx += run.size.width;
+      if (i == _lines.length - 1) {
+        line.draw(canvas, overflow: _overflowSpan);
+      } else {
+        line.draw(canvas);
       }
+      // double dx = 0;
+      // double maxLineHeight = line.maxLineHeight;
+      // // 记录除去截断符后，所能到达的最大行宽
+      // double maxOverlowLineWidth = 0;
+      // for (int j = 0; j < line.runs.length; j++) {
+      //   final run = line.runs[j];
+      //   // 最后一行，并且有截断符
+      //   if (i == _lines.length - 1 && _overflowSpan.hasOverflowSpan) {
+      //     if (run.size.width + maxOverlowLineWidth + _overflowSpan.size.width <
+      //         _width) {
+      //       maxOverlowLineWidth += run.size.width;
+      //     } else {
+      //       // 需要绘制截断符
+      //       assert(_overflowSpan.paragraph != null);
+      //       Offset offset =
+      //           Offset(dx, maxLineHeight - _overflowSpan.ascent);
+      //       _overflowSpan.draw(canvas, offset);
+      //       break;
+      //     }
+      //   }
+
+      //   Offset offset = Offset(dx, maxLineHeight - run.ascent);
+      //   run.draw(canvas, offset);
+      //   dx += run.size.width;
+      // }
       canvas.translate(0, line.bounds.height);
     }
 

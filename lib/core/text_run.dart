@@ -8,7 +8,7 @@ class RichTextRun {
         _height = paragraph.height,
         _line = paragraph.computeLineMetrics().first,
         offset = Offset.zero,
-        drawed = false;
+        _drawed = false;
 
   final String text;
   final int position;
@@ -39,6 +39,14 @@ class RichTextRun {
 
   Offset offset;
 
+  bool _drawed;
   /// 是否被绘制
-  bool drawed;
+  bool get drawed => _drawed;
+
+  void draw(Canvas canvas, Offset offset) {
+    if (drawed) return;
+    _drawed = true;
+    this.offset = offset;
+    canvas.drawParagraph(paragraph, offset);
+  }
 }
