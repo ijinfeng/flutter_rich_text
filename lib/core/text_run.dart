@@ -49,4 +49,9 @@ class RichTextRun {
     this.offset = offset;
     canvas.drawParagraph(paragraph, offset);
   }
+
+  @override
+  String toString() {
+    return 'Run:$text, drawed=$drawed, offset=$offset, size=$size';
+  }
 }

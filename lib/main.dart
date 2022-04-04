@@ -159,7 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.green))
               ]),
             ),
-            SizedBox(
+            Container(
+              color: Colors.amberAccent,
               height: 80,
             ),
             Padding(
@@ -195,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               },
                             style: TextStyle(
                                 // height: 1,
-                                fontSize: 30,
+                                fontSize: 40,
                                 color: Colors.black26,
                                 backgroundColor: Colors.lightBlue)),
                         // TextSpan(
@@ -203,12 +204,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         //         '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
                         //     style: TextStyle(fontSize: 20, color: Colors.red)),
                         TextSpan(
-                            text: '123141\n23\t4',
+                            text: '123141\n23\t4阿卡戴珊卡话费khsafkh',
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('点击数字-------');
                               },
-                            style: TextStyle(fontSize: 10, color: Colors.green))
+                            style: TextStyle(fontSize: 20, color: Colors.redAccent, backgroundColor: Colors.black38))
                       ])),
             ),
             Container(

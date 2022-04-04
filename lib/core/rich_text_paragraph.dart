@@ -75,14 +75,15 @@ class RichTextParagraph {
         }
       }
       if (text.children != null) {
-          for (var child in text.children!) {
-            assert(child is TextSpan, 'Only the TextSpan type is supported');
-            if (child is TextSpan) {
-              deepCollectTextSpan(child);
-            }
+        for (var child in text.children!) {
+          assert(child is TextSpan, 'Only the TextSpan type is supported');
+          if (child is TextSpan) {
+            deepCollectTextSpan(child);
           }
         }
+      }
     }
+
     deepCollectTextSpan(_text);
   }
 
@@ -114,7 +115,10 @@ class RichTextParagraph {
     double minLineHeight = double.infinity;
     double maxLineHeight = 0;
     double totalLineHeight = 0;
-    double maxLineAscent = 0, maxLineDecent = 0;
+    double maxLineAscent = 0,
+        maxLineDescent = 0,
+        minLineAscent = double.infinity,
+        minLineDescent = double.infinity;
     List<RichTextRun> runs = [];
     for (int i = 0; i < _runs.length; i++) {
       if (_maxLines > 0 && _lines.length >= _maxLines) {
@@ -129,11 +133,23 @@ class RichTextParagraph {
       final double runHeight = run.isTurn ? 0 : run.size.height;
       minLineHeight = math.min(minLineHeight, runHeight);
       maxLineHeight = math.max(maxLineHeight, runHeight);
+      minLineAscent = math.min(minLineAscent, run.ascent);
       maxLineAscent = math.max(maxLineAscent, run.ascent);
-      maxLineDecent = math.max(maxLineDecent, run.descent);
+      minLineDescent = math.min(minLineDescent, run.descent);
+      maxLineDescent = math.max(maxLineDescent, run.descent);
       if (run.isTurn || lineWidth + runWidth > maxWidth) {
         // 换行
-        _addLine(runs, maxWidth, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
+        _addLine(
+            runs,
+            maxWidth,
+            lineWidth,
+            lineHeight,
+            minLineHeight,
+            maxLineHeight,
+            minLineAscent,
+            maxLineAscent,
+            minLineDescent,
+            maxLineDescent);
         totalLineHeight += lineHeight;
         lineWidth = runWidth;
         lineHeight = runHeight;
@@ -147,11 +163,30 @@ class RichTextParagraph {
         runs.add(run);
       }
     }
-    _addLine(runs, maxWidth, lineWidth, lineHeight, minLineHeight, maxLineHeight, maxLineAscent, maxLineDecent);
+    _addLine(
+        runs,
+        maxWidth,
+        lineWidth,
+        lineHeight,
+        minLineHeight,
+        maxLineHeight,
+        minLineAscent,
+        maxLineAscent,
+        minLineDescent,
+        maxLineDescent);
   }
 
-  void _addLine(List<RichTextRun> runs, double maxWidth, double width, double height,
-      double minHeight, double maxHeight, double maxLineAscent, maxLineDecent) {
+  void _addLine(
+      List<RichTextRun> runs,
+      double maxWidth,
+      double width,
+      double height,
+      double minHeight,
+      double maxHeight,
+      double minLineAscent,
+      maxLineAscent,
+      minLineDecent,
+      maxLineDecent) {
     if (runs.isEmpty) return;
     double dy = 0;
     int numberOfLines = _lines.length;
@@ -163,8 +198,12 @@ class RichTextParagraph {
     final RichTextLine lineInfo = RichTextLine(runs, bounds, maxWidth);
     lineInfo.minLineHeight = minHeight;
     lineInfo.maxLineHeight = maxHeight;
+    lineInfo.minLineAscent = minLineAscent;
     lineInfo.maxLineAscent = maxLineAscent;
+    lineInfo.minLineDecent = minLineDecent;
     lineInfo.maxLineDecent = maxLineDecent;
+
+    print('line-$lineInfo');
     _lines.add(lineInfo);
   }
 
@@ -215,8 +254,11 @@ class RichTextParagraph {
 
     if (_overflowSpan.hasOverflowSpan && _lines.isNotEmpty) {
       var line = _lines[_lines.length - 1];
-      Rect bounds = Rect.fromLTWH(_overflowSpan.offset.dx,
-              _overflowSpan.offset.dy + line.bounds.top, _overflowSpan.size.width, _overflowSpan.size.height);
+      Rect bounds = Rect.fromLTWH(
+          _overflowSpan.offset.dx,
+          _overflowSpan.offset.dy + line.bounds.top,
+          _overflowSpan.size.width,
+          _overflowSpan.size.height);
       if (bounds.contains(position)) {
         return _overflowSpan.overflowSpan;
       }
@@ -236,6 +278,7 @@ class RichTextParagraph {
       } else {
         line.draw(canvas);
       }
+
       // double dx = 0;
       // double maxLineHeight = line.maxLineHeight;
       // // 记录除去截断符后，所能到达的最大行宽
@@ -257,7 +300,7 @@ class RichTextParagraph {
       //     }
       //   }
 
-      //   Offset offset = Offset(dx, maxLineHeight - run.ascent);
+      //   Offset offset = Offset(dx, maxLineHeight - run.ascent - 13.6);
       //   run.draw(canvas, offset);
       //   dx += run.size.width;
       // }
