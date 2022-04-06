@@ -115,50 +115,67 @@ class _MyHomePageState extends State<MyHomePage> {
                         // textBaseline: TextBaseline.ideographic,
                         color: Colors.black),
             ),
-            Container(
-                  color: Colors.blue,
-                  child: new Text(
-                    "Hg",
-                    style: TextStyle(
-                      fontSize: 100,
-                      backgroundColor: Colors.green.withAlpha(180)
-                    ),
-                    strutStyle: StrutStyle(
-                      forceStrutHeight: true,
-                      fontSize: 100,
-                      height: 1,
-                    ),
+            // Container(
+            //       color: Colors.blue,
+            //       child: new Text(
+            //         "Hg",
+            //         style: TextStyle(
+            //           fontSize: 100,
+            //           backgroundColor: Colors.green.withAlpha(180)
+            //         ),
+            //         strutStyle: StrutStyle(
+            //           forceStrutHeight: true,
+            //           fontSize: 100,
+            //           height: 1,
+            //         ),
 
-                  ),
+            //       ),
 
-                ),
+            //     ),
             RichText(
-              maxLines: null,
-              // overflow: TextOverflow.ellipsis,
-              text: TextSpan(children: [
-                TextSpan(
-                    text:
-                        '我是一只卡号发的gabfcq',
-                    style: TextStyle(
-                        fontSize: 30,
-                        // height: 1,
-                        backgroundColor: Colors.lightBlue,
-                        textBaseline: TextBaseline.ideographic,
-                        color: Colors.red)
-                        ),
-                TextSpan(
-                    text: '12314123\t4',
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        print('点击率');
-                      },
-                    style: TextStyle(
-                        fontSize: 10,
-                        // height: 1,
-                        backgroundColor: Colors.greenAccent,
-                        color: Colors.green))
-              ]),
-            ),
+          
+                  text: TextSpan(
+                      text: '头部',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print("点击头部！！");
+                        },
+                      children: [
+                        TextSpan(
+                            text: '中文',
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('点击中文1267++++++');
+                              },
+                            style: TextStyle(
+                                // height: 1,
+                                fontSize: 20,
+                                color: Colors.black26,
+                                )),
+                        TextSpan(
+                            text: '中文1267呀中文1267这gn你好呀',
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('点击中文1267++++++');
+                              },
+                            style: TextStyle(
+                                // height: 1,
+                                fontSize: 40,
+                                color: Colors.black26,
+                                backgroundColor: Colors.lightBlue
+                                )),
+                        TextSpan(
+                            text:
+                                '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                            style: TextStyle(fontSize: 20, color: Colors.red)),
+                        TextSpan(
+                            text: '1231a\n41234阿卡戴珊卡话费khsafkh',
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                print('点击数字-------');
+                              },
+                            style: TextStyle(fontSize: 20, color: Colors.redAccent, backgroundColor: Colors.black38))
+                      ])),
             Container(
               color: Colors.amberAccent,
               height: 80,
@@ -198,13 +215,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 // height: 1,
                                 fontSize: 40,
                                 color: Colors.black26,
-                                backgroundColor: Colors.lightBlue)),
-                        // TextSpan(
-                        //     text:
-                        //         '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                        //     style: TextStyle(fontSize: 20, color: Colors.red)),
+                                // backgroundColor: Colors.lightBlue
+                                )),
                         TextSpan(
-                            text: '123141\n23\t4阿卡戴珊卡话费khsafkh',
+                            text:
+                                '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                            style: TextStyle(fontSize: 20, color: Colors.red)),
+                        TextSpan(
+                            text: '1231a\n41234阿卡戴珊卡话费khsafkh',
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('点击数字-------');

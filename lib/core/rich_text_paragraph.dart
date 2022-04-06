@@ -99,10 +99,7 @@ class RichTextParagraph {
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
     final run = RichTextRun(runText, position, paragraph, below);
     _runs.add(run);
-
-    // var line = run.paragraph.computeLineMetrics().first;
-    // print('run=${run.text}, ${line}, ${run.paragraph.ideographicBaseline}, ${run.size.height}');
-    // print('run=${run.text}, size=${run.size}, sh=${style.height},ss=${style.letterSpacing}');
+    print(run);
   }
 
   final List<RichTextLine> _lines = [];
@@ -119,6 +116,8 @@ class RichTextParagraph {
         maxLineDescent = 0,
         minLineAscent = double.infinity,
         minLineDescent = double.infinity;
+    double maxLineBaseline = 0;
+    
     List<RichTextRun> runs = [];
     for (int i = 0; i < _runs.length; i++) {
       if (_maxLines > 0 && _lines.length >= _maxLines) {
@@ -137,6 +136,7 @@ class RichTextParagraph {
       maxLineAscent = math.max(maxLineAscent, run.ascent);
       minLineDescent = math.min(minLineDescent, run.descent);
       maxLineDescent = math.max(maxLineDescent, run.descent);
+      maxLineBaseline = math.max(maxLineBaseline, run.baseline);
       if (run.isTurn || lineWidth + runWidth > maxWidth) {
         // 换行
         _addLine(
@@ -149,12 +149,18 @@ class RichTextParagraph {
             minLineAscent,
             maxLineAscent,
             minLineDescent,
-            maxLineDescent);
+            maxLineDescent,
+            maxLineBaseline);
         totalLineHeight += lineHeight;
         lineWidth = runWidth;
         lineHeight = runHeight;
         minLineHeight = lineHeight;
         maxLineHeight = lineHeight;
+        maxLineAscent = run.ascent;
+        maxLineDescent = run.descent;
+        maxLineBaseline = run.baseline;
+        minLineAscent = run.ascent;
+        minLineDescent = run.descent;
         runs = [];
         runs.add(run);
       } else {
@@ -173,20 +179,22 @@ class RichTextParagraph {
         minLineAscent,
         maxLineAscent,
         minLineDescent,
-        maxLineDescent);
+        maxLineDescent,
+        maxLineBaseline);
   }
 
   void _addLine(
       List<RichTextRun> runs,
       double maxWidth,
-      double width,
-      double height,
-      double minHeight,
-      double maxHeight,
-      double minLineAscent,
+      width,
+      height,
+      minHeight,
+      maxHeight,
+      minLineAscent,
       maxLineAscent,
       minLineDecent,
-      maxLineDecent) {
+      maxLineDecent,
+      maxLineBaseline) {
     if (runs.isEmpty) return;
     double dy = 0;
     int numberOfLines = _lines.length;
@@ -202,6 +210,7 @@ class RichTextParagraph {
     lineInfo.maxLineAscent = maxLineAscent;
     lineInfo.minLineDecent = minLineDecent;
     lineInfo.maxLineDecent = maxLineDecent;
+    lineInfo.maxLineBaseline = maxLineBaseline;
 
     print('line-$lineInfo');
     _lines.add(lineInfo);
@@ -278,32 +287,6 @@ class RichTextParagraph {
       } else {
         line.draw(canvas);
       }
-
-      // double dx = 0;
-      // double maxLineHeight = line.maxLineHeight;
-      // // 记录除去截断符后，所能到达的最大行宽
-      // double maxOverlowLineWidth = 0;
-      // for (int j = 0; j < line.runs.length; j++) {
-      //   final run = line.runs[j];
-      //   // 最后一行，并且有截断符
-      //   if (i == _lines.length - 1 && _overflowSpan.hasOverflowSpan) {
-      //     if (run.size.width + maxOverlowLineWidth + _overflowSpan.size.width <
-      //         _width) {
-      //       maxOverlowLineWidth += run.size.width;
-      //     } else {
-      //       // 需要绘制截断符
-      //       assert(_overflowSpan.paragraph != null);
-      //       Offset offset =
-      //           Offset(dx, maxLineHeight - _overflowSpan.ascent);
-      //       _overflowSpan.draw(canvas, offset);
-      //       break;
-      //     }
-      //   }
-
-      //   Offset offset = Offset(dx, maxLineHeight - run.ascent - 13.6);
-      //   run.draw(canvas, offset);
-      //   dx += run.size.width;
-      // }
       canvas.translate(0, line.bounds.height);
     }
 

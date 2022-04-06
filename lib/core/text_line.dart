@@ -10,7 +10,8 @@ class RichTextLine {
         minLineAscent = 0,
         maxLineAscent = 0,
         minLineDecent = 0,
-        maxLineDecent = 0;
+        maxLineDecent = 0,
+        maxLineBaseline = 0;
 
   final List<RichTextRun> runs;
   final Rect bounds;
@@ -21,6 +22,7 @@ class RichTextLine {
   double maxLineAscent;
   double minLineDecent;
   double maxLineDecent;
+  double maxLineBaseline;
 
   double get dx => bounds.left;
   double get dy => bounds.top;
@@ -39,13 +41,12 @@ class RichTextLine {
           // 需要绘制截断符
           assert(overflow.paragraph != null);
           Offset offset =
-              Offset(dx, maxLineHeight - overflow.ascent - maxLineDecent);
+              Offset(dx, maxLineBaseline - overflow.baseline);
           overflow.draw(canvas, offset);
           break;
         }
       }
-
-      Offset offset = Offset(dx, maxLineHeight - run.descent - maxLineDecent - maxLineAscent);
+      Offset offset = Offset(dx, maxLineBaseline - run.baseline);
       run.draw(canvas, offset);
       dx += run.size.width;
     }
@@ -58,7 +59,7 @@ class RichTextLine {
       text += run.text;
     }
     return '''
-  $text,
+  line: $text,
   bounds=$bounds, 
   maxWidth=$maxWidth, 
   minLineHeight=$minLineHeight, 
@@ -66,7 +67,8 @@ class RichTextLine {
   minLineAscent=$minLineAscent, 
   maxLineAscent=$maxLineAscent, 
   minLineDecent=$minLineDecent, 
-  maxLineDecent=$maxLineDecent
+  maxLineDecent=$maxLineDecent,
+  maxLineBaseline=$maxLineBaseline,
 ''';
   }
 }

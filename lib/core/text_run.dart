@@ -19,6 +19,7 @@ class RichTextRun {
   double get ascent => _line.ascent;
   double get descent => _line.descent;
   double get baseline => _line.baseline;
+  double get unscaledAscent => _line.unscaledAscent;
 
   final double _width;
   final double _height;
@@ -40,6 +41,7 @@ class RichTextRun {
   Offset offset;
 
   bool _drawed;
+
   /// 是否被绘制
   bool get drawed => _drawed;
 
@@ -52,6 +54,14 @@ class RichTextRun {
 
   @override
   String toString() {
-    return 'Run:$text, drawed=$drawed, offset=$offset, size=$size';
+    return '''Run: $text, 
+      drawed=$drawed,
+      offset=$offset, 
+      size=$size,
+      ascent=$ascent,
+      descent=$descent,
+      baseline=$baseline,
+      unscaledAscent=$unscaledAscent,
+      ''';
   }
 }
