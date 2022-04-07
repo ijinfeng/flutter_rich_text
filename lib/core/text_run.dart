@@ -45,6 +45,9 @@ class RichTextRun {
   /// 是否被绘制
   bool get drawed => _drawed;
 
+  /// 标记需要重新绘制
+  void setNeedsDraw() => _drawed = false;
+
   void draw(Canvas canvas, Offset offset) {
     if (drawed) return;
     _drawed = true;

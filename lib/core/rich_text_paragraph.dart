@@ -60,12 +60,19 @@ class RichTextParagraph {
     _calculateIntrinsicWidth();
   }
 
-  void _setupOverflowSpan() {}
+  void _setupOverflowSpan() {
+    _overflowSpan.setNeedsDraw();
+  }
 
   final List<RichTextRun> _runs = [];
   // 收集每个文字
   void _calculateRuns() {
-    if (_runs.isNotEmpty) return;
+    if (_runs.isNotEmpty) {
+      for (var element in _runs) {
+        element.setNeedsDraw();
+      }
+      return;
+    }
 
     void deepCollectTextSpan(TextSpan text) {
       if (text.text != null) {

@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //     ),
             RichText(
-          
+              maxLines: 2,
                   text: TextSpan(
                       text: '头部',
                       recognizer: TapGestureRecognizer()
@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 color: Colors.black26,
                                 )),
                         TextSpan(
-                            text: '中文1267呀中文1267这gn你好呀',
+                            text: '中文1267呀中文1267这gn你好',
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('点击中文1267++++++');
@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         TextSpan(
                             text:
                                 '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                            style: TextStyle(fontSize: 20, color: Colors.red)),
+                            style: TextStyle(fontSize: 20, color: Colors.red, backgroundColor: Colors.blueAccent)),
                         TextSpan(
                             text: '1231a\n41234阿卡戴珊卡话费khsafkh',
                             recognizer: TapGestureRecognizer()
@@ -177,15 +177,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: TextStyle(fontSize: 20, color: Colors.redAccent, backgroundColor: Colors.black38))
                       ])),
             Container(
-              color: Colors.amberAccent,
-              height: 80,
+              color: Colors.green,
+              height: 10,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: RichLabel(
                   maxLines: fold ? 2 : 0,
                   overflowSpan: TextSpan(
-                      text: '展示全部',
+                      text: '展示全部...',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           print('点击展开全部');
@@ -199,14 +199,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       )),
                   overflow: RichTextOverflow.custom,
                   text: TextSpan(
-                      text: '头部',
+                      text: '头部2',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           print("点击头部！！");
                         },
                       children: [
                         TextSpan(
-                            text: '中文1267这gn你好n你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
+                            text: '中文001267这gn你好n你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 print('点击中文1267++++++');
@@ -215,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 // height: 1,
                                 fontSize: 40,
                                 color: Colors.black26,
-                                // backgroundColor: Colors.lightBlue
+                                backgroundColor: Colors.lightBlue
                                 )),
                         TextSpan(
                             text:

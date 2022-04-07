@@ -91,6 +91,9 @@ class RichTextOverflowSpan {
   bool _drawed;
   bool get drawed => _drawed;
 
+  /// 标记需要重新绘制
+  void setNeedsDraw() => _drawed = false;
+
   void draw(Canvas canvas, Offset offset) {
     if (drawed || paragraph == null) return;
     _drawed = true;
