@@ -30,6 +30,8 @@ class RichTextParagraph {
   // 最大行数，0为不限制
   final int _maxLines;
   final RichTextOverflowSpan _overflowSpan;
+  // 是否需要展示截断符
+  bool _showOverflow = false;
 
   double _width = 0;
   double _height = 0;
@@ -61,6 +63,7 @@ class RichTextParagraph {
   }
 
   void _setupOverflowSpan() {
+    _showOverflow = false;
     _overflowSpan.setNeedsDraw();
   }
 
@@ -106,7 +109,7 @@ class RichTextParagraph {
     paragraph.layout(const ui.ParagraphConstraints(width: double.infinity));
     final run = RichTextRun(runText, position, paragraph, below);
     _runs.add(run);
-    print(run);
+    // print(run);
   }
 
   final List<RichTextLine> _lines = [];
@@ -129,8 +132,10 @@ class RichTextParagraph {
     for (int i = 0; i < _runs.length; i++) {
       if (_maxLines > 0 && _lines.length >= _maxLines) {
         // 到达最大行数限制
+        _showOverflow = true;
         return;
       } else if (totalLineHeight > maxHeight) {
+        _showOverflow = true;
         // 到达最大高度限制
         return;
       }
@@ -219,7 +224,7 @@ class RichTextParagraph {
     lineInfo.maxLineDecent = maxLineDecent;
     lineInfo.maxLineBaseline = maxLineBaseline;
 
-    print('line-$lineInfo');
+    // print('line-$lineInfo');
     _lines.add(lineInfo);
   }
 
@@ -290,7 +295,7 @@ class RichTextParagraph {
     for (int i = 0; i < _lines.length; i++) {
       var line = _lines[i];
       if (i == _lines.length - 1) {
-        line.draw(canvas, overflow: _overflowSpan);
+        line.draw(canvas, overflow: _showOverflow ? _overflowSpan : null);
       } else {
         line.draw(canvas);
       }

@@ -66,6 +66,48 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget createRichLabelDemo() {
+    Widget label = RichLabel(
+        maxLines: fold ? 2 : 0,
+        overflowSpan: TextSpan(
+            text: '展示全部',
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                print('点击展开全部');
+                setState(() {
+                  fold = !fold;
+                });
+              },
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            )),
+        overflow: RichTextOverflow.custom,
+        text: TextSpan(
+            text: '#我是标签#',
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                print("点击标签");
+              },
+              style: const TextStyle(color: Colors.redAccent),
+            children: [
+              TextSpan(
+                  text: '中文你好呀+数字123456+英文kuhasfjkg组合起来就非常好看了===',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      print('点击111');
+                    },
+                  style: const TextStyle(
+                      fontSize: 40,
+                      color: Colors.black26,
+                      backgroundColor: Colors.lightBlue)),
+              const TextSpan(
+                  text: '中文你好呀+数字123456+英文kuhasfjkg组合起来就非常好看了',
+                  style: TextStyle(fontSize: 20, color: Colors.red)),
+            ]));
+    return label;
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -110,10 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 // height: 0,
               ),
               style: TextStyle(
-                        fontSize: 30,
-                        backgroundColor: Colors.lightGreen,
-                        // textBaseline: TextBaseline.ideographic,
-                        color: Colors.black),
+                  fontSize: 30,
+                  backgroundColor: Colors.lightGreen,
+                  // textBaseline: TextBaseline.ideographic,
+                  color: Colors.black),
             ),
             // Container(
             //       color: Colors.blue,
@@ -133,102 +175,55 @@ class _MyHomePageState extends State<MyHomePage> {
 
             //     ),
             RichText(
-              maxLines: 2,
-                  text: TextSpan(
-                      text: '头部',
+                maxLines: 2,
+                text: TextSpan(children: [
+                  TextSpan(
+                      text: '小字号的中文',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print("点击头部！！");
+                          print('点击中文1267++++++');
                         },
-                      children: [
-                        TextSpan(
-                            text: '中文',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('点击中文1267++++++');
-                              },
-                            style: TextStyle(
-                                // height: 1,
-                                fontSize: 20,
-                                color: Colors.black26,
-                                )),
-                        TextSpan(
-                            text: '中文1267呀中文1267这gn你好',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('点击中文1267++++++');
-                              },
-                            style: TextStyle(
-                                // height: 1,
-                                fontSize: 40,
-                                color: Colors.black26,
-                                backgroundColor: Colors.lightBlue
-                                )),
-                        TextSpan(
-                            text:
-                                '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                            style: TextStyle(fontSize: 20, color: Colors.red, backgroundColor: Colors.blueAccent)),
-                        TextSpan(
-                            text: '1231a\n41234阿卡戴珊卡话费khsafkh',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('点击数字-------');
-                              },
-                            style: TextStyle(fontSize: 20, color: Colors.redAccent, backgroundColor: Colors.black38))
-                      ])),
+                      style: TextStyle(
+                        // height: 1,
+                        fontSize: 20,
+                        color: Colors.black26,
+                      )),
+                  TextSpan(
+                      text: '大字号的英文abcgfh数字123和中文标点,.!',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print('点击中文1267++++++');
+                        },
+                      style: TextStyle(
+                          // height: 1,
+                          fontSize: 40,
+                          color: Colors.black26,
+                          backgroundColor: Colors.lightBlue)),
+                  TextSpan(
+                      text:
+                          '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red,
+                          backgroundColor: Colors.blueAccent)),
+                  TextSpan(
+                      text: '1231a\n41234阿卡戴珊卡话费khsafkh',
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          print('点击数字-------');
+                        },
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.redAccent,
+                          backgroundColor: Colors.black38))
+                ])),
             Container(
               color: Colors.green,
               height: 10,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RichLabel(
-                  maxLines: fold ? 2 : 0,
-                  overflowSpan: TextSpan(
-                      text: '展示全部...',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          print('点击展开全部');
-                          setState(() {
-                            fold = !fold;
-                          });
-                        },
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                      )),
-                  overflow: RichTextOverflow.custom,
-                  text: TextSpan(
-                      text: '头部2',
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          print("点击头部！！");
-                        },
-                      children: [
-                        TextSpan(
-                            text: '中文001267这gn你好n你好呀中文1267这gn你好呀呀中文1267这gn你好呀',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('点击中文1267++++++');
-                              },
-                            style: TextStyle(
-                                // height: 1,
-                                fontSize: 40,
-                                color: Colors.black26,
-                                backgroundColor: Colors.lightBlue
-                                )),
-                        TextSpan(
-                            text:
-                                '我是一只卡号发的快回123124nkasf的快回我是一只卡号发的快回复爱对方123124nkasf的快回',
-                            style: TextStyle(fontSize: 20, color: Colors.red)),
-                        TextSpan(
-                            text: '1231a\n41234阿卡戴珊卡话费khsafkh',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                print('点击数字-------');
-                              },
-                            style: TextStyle(fontSize: 20, color: Colors.redAccent, backgroundColor: Colors.black38))
-                      ])),
+              child: createRichLabelDemo(),
             ),
             Container(
               color: Colors.green,
