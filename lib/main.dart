@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ..onTap = () {
                 print("点击标签");
               },
-              style: const TextStyle(color: Colors.redAccent),
+            style: const TextStyle(color: Colors.redAccent),
             children: [
               TextSpan(
                   text: '中文你好呀+数字123456+英文kuhasfjkg组合起来就非常好看了===',
