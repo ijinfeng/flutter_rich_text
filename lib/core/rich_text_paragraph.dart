@@ -80,8 +80,15 @@ class RichTextParagraph {
     void deepCollectTextSpan(TextSpan text) {
       if (text.text != null) {
         String simpleText = text.text!;
-        for (int i = 0; i < simpleText.length; i++) {
-          _addRun(i, text.style ?? _textStyle, text);
+        final _runs = simpleText.runes;
+        int location = 0;
+        int length = 1;
+        for (var run in _runs) {
+          final singleChar = String.fromCharCode(run);
+          debugPrint('$run, $singleChar, ${singleChar.length}');
+          length = singleChar.length;
+          _addRun(location, length, text.style ?? _textStyle, text);
+          location += length; 
         }
       }
       if (text.children != null) {
@@ -97,10 +104,10 @@ class RichTextParagraph {
     deepCollectTextSpan(_text);
   }
 
-  void _addRun(int position, TextStyle style, TextSpan below) {
+  void _addRun(int position, int length, TextStyle style, TextSpan below) {
     assert(below.text != null);
     String text = below.text!;
-    String runText = text.substring(position, position + 1);
+    String runText = text.substring(position, position + length);
     ui.TextStyle _style = style.getTextStyle();
     final builder = ui.ParagraphBuilder(_paragraphStyle)
       ..pushStyle(_style)

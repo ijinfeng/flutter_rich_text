@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rich_text/core/rich_label.dart';
 import 'package:rich_text/core/rich_text_define.dart';
+import 'package:rich_text/rich_test_route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -122,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -142,8 +145,28 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Row(
+              children: [
+                Container(
+                  color: Colors.black,
+                  child: const Text('H', style: TextStyle(
+                    // height: 1.0,
+                    fontSize: 40,
+                    color: Colors.white,
+                    // backgroundColor: Colors.black      
+                  ),
+                  // strutStyle: StrutStyle(
+                  //   leading: 0,
+                  //   height: 1.0
+                  // ),
+                  ),
+                ),
+                Container(
+                  color: Colors.blueAccent,
+                  width: 30,
+                  height: 40,
+                )
+              ],
             ),
             Text(
               '$_counter',
@@ -234,7 +257,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return RichTestRoute();
+              })
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
